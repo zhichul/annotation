@@ -1,0 +1,179 @@
+---
+args:
+  model: "gpt-4o"
+  temperature: 0  # raise this in hopes of making some interesting connections?
+---
+prompt:
+
+  - system: |-
+      You are a political science researcher with past experience as a social
+      media moderator.  For each social media thread, code its {{post.name}} 
+      as directed.
+  - user: |-
+      {{post.thread}}
+
+      Characterize the {{post.name}} just above by filling out the following
+      JSON template. A <LIST> is a JSON list that may be empty [] or contain 1
+      element or multiple elements.  Each element **must be understandable on
+      its own**, by someone who has **not** read the social media thread or any
+      of the other elements in the <LIST> or the JSON.  Thus, be explicit when
+      writing each element: 
+      * do not use pronouns that assume knowledge of external context
+      * do not omit important arguments to verbs
+      * spell out the full names of people and entities
+      * etc.
+
+      If the post contains sarcasm, answer with respect to the poster's actual
+      underlying position, not the position that they are sarcastically adopting.
+
+      ```
+      {
+        "publicness": <NUMBER FROM 0 to 2>,
+        # include the remaining fields only if "publicness" > 0
+        "links": <LIST OF URLS>,
+        "sentiment_positive": <LIST OF NOUN PHRASES>,
+        "sentiment_negative": <LIST OF NOUN PHRASES>,
+        "predictions": <LIST OF PHRASES>,
+        "predictions_rating": <NUMBER FROM 0 to 4>,
+        "evidence_public": <LIST OF PHRASES>,
+        "evidence_public_rating": <NUMBER FROM 0 to 4>,
+        "evidence_personal": <LIST OF PHRASES>,
+        "evidence_personal_rating": <NUMBER FROM 0 to 4>,
+        "connections": <LIST OF PHRASES>,
+        "connections_rating": <NUMBER FROM 0 to 4>,
+        "pointers": <LIST OF PHRASES>,
+        "values": <LIST OF PHRASES>,
+        "values_rating": <NUMBER FROM 0 to 4>,
+        "proposals": <LIST OF PHRASES>,
+        "proposals_rating": <NUMBER FROM 0 to 4>,
+        "framing": <LIST OF PHRASES>,
+        "framing_rating": <NUMBER FROM 0 to 3>,
+        "arguments": <LIST OF SENTENCES>,
+        "questions": <LIST OF SENTENCES>
+        "humor": <NUMBER FROM 0 to 3>,
+        "engagingness": <NUMBER FROM 0 to 5>,
+        "dishonesty": <NUMBER FROM 0 to 2>,
+        "toxicity": <NUMBER FROM 0 to 2>,
+        "value": <NUMBER FROM 0 to 5>
+      }
+      where
+      * "publicness": Does the {{post.name}} comment on matters that
+        are of interest beyond this thread?  Answer 0 if it is a
+        private message, or makes no substantive argument, or is only
+        responding to a specific statement in the thread that is
+        unlikely to be repeated elsewhere.
+      
+      * "links": The {{post.name}} may refer implicitly to other articles
+        earlier in the thread.  Which links should you read in order to
+        **understand** the {{post.name}}?
+
+      * "sentiment_positive": What does the {{post.name}} express positive
+        sentiment towards, explicitly or implicitly?  Who or what 
+        specifically is good and should be supported or strengthened?
+        To repeat, each noun phrase that you list must have a clear
+        referent that can be understood without further context.
+ 
+      * "sentiment_negative": What does the {{post.name}} express negative
+        sentiment towards, explicitly or implicitly?  Who or what specifically
+        is bad and should be opposed or reduced?
+
+      * "predictions": What does the {{post.name}} predict, if anything? 
+        What will happen?
+
+      * "predictions_rating": 0 if there are no predictions, 1 if there are
+        incidental predictions, 2 if the predictions are a main point of the
+        post, 3 if they are specific, 4 if they are creative or insightful.
+
+      * "evidence_public": To support its claims, what information, if any, 
+        does the {{post.name}} provide that could be verified or falsified by an
+        ordinary Internet user?
+
+      * "evidence_public_rating": Analogous to "predictions_rating". 
+        Again, use 3 if the evidence is specific. Use the top score of 4 if the
+        evidence is very apropos or may be unfamiliar to other social media
+        users.
+
+      * "evidence_personal": To support its claims, what information, if any,
+        does the {{post.name}} provide from the poster's own personal
+        experience?
+
+      * "evidence_personal_rating": Analogous to "predictions_rating".
+        Use the top score of 4 if the personal experiences are engaging
+        or relevant.
+
+      * "connections": Does the {{post.name}} surprisingly connect
+        disparate topics, for example in an analogy?  If so, list
+        the connections.
+
+      * "connections_rating": Analogous to "predictions_rating".
+        Use the top score of 4 if the connections are useful, creative,
+        or may be unfamiliar to other social media users.
+
+      * "pointers": What does the {{post.name}} recommend that its readers
+        should read or experience in order to learn more?  Cite these 
+        things so that they are easy to find.
+
+      * "proposals": What actions, if any, does the {{post.name}}
+        recommend should be taken by society or by specific
+        organizations or individuals **other than the reader**?
+
+      * "proposals_rating": Analogous to "predictions_rating".
+        Use the top score of 4 if the proposals are thought-provoking.
+
+      * "values": What values, if any, does the {{post.name}}
+        *explicitly* articulate, perhaps to motivate its 
+        "sentiments" or "proposals"?
+
+      * "values_rating": Analogous to "predictions_rating".
+         Use the top score of 4 if the stated values bring the
+         issues into focus, motivating the sentiments, proposals,
+         or connections.
+
+      * "framing": If the {{post.name}} tries to step back from
+        the debate and clarify the issues being discussed by others, 
+        what issues does it identify?
+
+      * "framing_rating": Analogous to "predictions_rating".
+        Use the top score of 4 if the framing sheds light and will help
+        facilitate a more constructive discussion.
+
+      * "arguments": What are the main arguments of the {{post.name}}, if any?
+        IMPORTANT: State these fully and neutrally, identifying exactly who
+        or what you are talking about so that the arguments can be
+        understood by an ordinary reader who hasn't read the post or the thread.
+        IMPORTANT: Do not restate all the supporting evidence, values, etc.  
+        Rather, focus on the 0 to 3 main points that the poster is trying to
+        convince the reader of. Do not disclose the existence of the post or the
+        poster.  Just restate *each* argument directly to the reader as if it is
+        your own argument. For example, do not say "Expresses support for X" or
+        "The poster supports X"; say "I support X".  
+
+      * "questions": If the poster has substantive, non-rhetorical
+        questions that they want others to answer, state them here
+        in a neutral style.        
+
+      * "humor": How much is the {{post.name}} trying to be witty?
+
+      * "engagingness": Did you enjoy reading the {{post.name}}?  Is it
+        well-written, accessible, engaging, and appropriate in length?
+        Give a high score if it makes its intended point well.  Reserve
+        a score of 5 for quote-worthy posts that are good enough to share.
+
+      * "dishonesty": Does the {{post.name}} appear to be misleading or
+        intellectually dishonest?
+
+      * "toxicity": Does the {{post.name}} violate norms of public
+        discourse, for example through *gratuitous* attacks or insults
+        or violent rhetoric?
+        
+      * "value": Overall, and considering your previous answers, did the 
+        {{post.name}} make you think?  Was reading it a good use of your time?
+
+response_format: 
+   type: json_object
+
+legal_answer_type: json
+
+legal_answers: null
+
+num_answers: 1

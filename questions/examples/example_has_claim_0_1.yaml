@@ -1,0 +1,21 @@
+---
+args:
+  model: "gpt-3.5-turbo-0125"
+  temperature: 0.1 
+---
+prompt:
+  - system: "You are a helpful assistant."
+  - user: "
+      You will be given social media posts. You should judge whether the post has a claim. Give your answer as 0 or 1, where 0 means no claim, and 1 means has claims.
+      Post: '''{{ post }}'''
+      Answer:
+    "
+
+legal_answer_type:
+  bool
+
+legal_answers:
+  [true, false]
+
+num_answers:
+  1

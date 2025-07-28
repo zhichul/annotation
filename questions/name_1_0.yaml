@@ -1,0 +1,17 @@
+---
+# The way that {{ post }} is referred to in thread.yaml.
+args:
+  model: "gpt-4o-mini"   # not used
+
+alias:
+  binary: binary_1
+  distill: distill_1
+  feedback: feedback_1
+  name: name_1
+  rewrite: rewrite_1
+  summary: summary_1
+  thread: thread_1
+  unary: unary_1
+---
+method: static
+value: {% if len(post0.ancestors)==0 %}POST{% elif len(post0.ancestors)==1 %}REPLY{% else %}FINAL REPLY{% endif %}

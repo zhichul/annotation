@@ -1,0 +1,120 @@
+---
+args:
+  model: "gpt-3.5-turbo-0125"
+  temperature: 0.1   # raise this?
+---
+prompt:
+
+  - system: |
+      You are a political science researcher with past experience as a social
+      media moderator.  For each social media thread, rate its FINAL POST as
+      directed.
+  - user: |
+      ```
+      {{ post0.ancestors }}
+      ``` 
+      FINAL POST:
+      ```
+      {{ post0 }}
+      ```
+      Evaluate the FINAL POST by filling out the following JSON template.  
+      A <LIST> is a JSON list that may be empty [] or contain 1 element or
+      multiple elements.
+      ```
+      {
+        "publicness": <NUMBER FROM 0 to 2>,
+        # include the remaining fields only if "publicness" > 0
+        "links": <LIST OF URLS>,
+        "sentiment_positive": <LIST OF PHRASES>,
+        "sentiment_negative": <LIST OF PHRASES>,
+        "predictions": <LIST OF PHRASES>,
+        "evidence_public": <LIST OF PHRASES>,
+        "evidence_personal": <LIST OF PHRASES>,
+        "connections": <LIST OF PHRASES>,
+        "pointers": <LIST OF PHRASES>,
+        "values": <LIST OF PHRASES>,
+        "proposals": <LIST OF PHRASES>,
+        "framing": <NUMBER FROM 0 to 3>,
+        "arguments": <LIST OF SENTENCES>,
+        "humor": <NUMBER FROM 0 to 3>,
+        "engagingness": <NUMBER FROM 0 to 5>,
+        "dishonesty": <NUMBER FROM 0 to 2>,
+        "offensiveness": <NUMBER FROM 0 to 2>,
+        "value": <NUMBER FROM 0 to 5>
+      }
+      where
+      * "publicness": Does the FINAL POST comment on matters that
+        are of interest beyond this thread?  Answer 0 if it is a
+        private message, or makes no substantive argument, or is only
+        responding to a specific statement in the thread that is
+        unlikely to be repeated elsewhere.
+      
+      * "links": To understand the FINAL POST properly, would
+        you first have to read any pages whose URLs are given earlier
+        in the thread?  If so, list the URLs here.
+
+      * "sentiment_positive": What does the FINAL POST express positive
+        sentiment towards?
+ 
+      * "sentiment_negative": What does the FINAL POST express negative
+        sentiment towards?
+
+      * "predictions": What does the FINAL POST predict, if anything?
+
+      * "evidence_public": What information, if any, does the FINAL POST
+        provide that could be verified or falsified by an ordinary
+        Internet user?
+
+      * "evidence_personal": What information, if any, does the FINAL
+        POST provide from the poster's own personal experience?
+
+      * "connections": Does the FINAL POST surprisingly connect
+        disparate topics, for example in an analogy?  If so, list
+        the connections.
+
+      * "pointers": What does the FINAL POST recommend that its readers
+        should read or experience in order to learn more?
+
+      * "proposals": What actions, if any, does the FINAL POST
+        recommend should be taken by society or by specific
+        individuals or organizations?
+
+      * "values": What values, if any, does the FINAL POST
+        *explicitly* articulate, perhaps to motivate its 
+        "sentiments" or "proposals"?
+
+      * "framing": How much does the FINAL POST try to step back from
+        the debate and helpfully clarify the issues being discussed?
+
+      * "arguments": If the post makes arguments, separately restate
+        each main argument in a neutral style.  Do not disclose the
+        existence of the post or the poster.  Just restate *each*
+        argument directly to the reader as if it is your own argument.
+        For example, do not say "Expresses support for X" or "The
+        poster supports X"; say "I support X".
+
+      * "humor": How much is the FINAL POST trying to be witty?
+
+      * "engagingness": Did you enjoy reading the FINAL POST?  Is it
+        well-written, accessible, engaging, and appropriate in length?
+        Give a high score if it makes its intended point well.  Reserve
+        a score of 5 for quote-worthy posts that are good enough to share.
+
+      * "dishonesty": Does the FINAL POST appear to be misleading or
+        intellectually dishonest?
+
+      * "offensiveness": Does the FINAL POST violate norms of public
+        discourse, for example through *gratuitous* attacks or insults
+        or violent rhetoric?
+        
+      * "value": Overall, and considering your previous answers, did the 
+        FINAL POST make you think?  Was reading it a good use of your time?
+
+response_format: 
+   type: json_object
+
+legal_answer_type: json
+
+legal_answers: null
+
+num_answers: 1

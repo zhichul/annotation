@@ -1,0 +1,37 @@
+---
+args:
+  model: "gpt-3.5-turbo-0125"
+  temperature: 0.1 
+  max_tokens: 1
+  agreement_kw: "in agreement with"
+
+alias:
+  topic: "example_topic_0"
+  relevance: "example_relevance_0"
+  claim: "example_claim_0"
+  has_claim: "example_has_claim_0"
+---
+{% if posts[0].relevance(post1) > 1 and post0.has_claim and post1.has_claim %}
+method: openai
+prompt:
+  - system: "You are a helpful assistant."
+  - user: |
+      You will be given two social media posts. You should decide if the first post is {{agreement_kw}} the second. Please use a scale from 1 to 5, with 1 being not relevant and 5 being most relevant. Answer with a single number, do not give reasoning or explain it. Another LLM has also annotated the claims of those two posts.
+      First post: '''{{ posts[0] }}'''\n\n
+      LLM's annotation of its claim: {{ posts[0].claim }}
+      Second post: '''{{ post1 }}'''
+      LLM's annotation of its claim: {{ posts[1].claim }}
+      Answer:
+
+legal_answer_type:
+  int
+
+legal_answers:
+  [1,2,3,4,5]
+
+num_answers:
+  1
+{% else %}
+method: static
+value: Not applicable because either posts are not relevant enough or not making claims.
+{% endif %}

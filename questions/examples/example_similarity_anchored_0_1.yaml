@@ -1,0 +1,23 @@
+---
+args:
+  model: "gpt-3.5-turbo-0125"
+  temperature: 0.0
+  max_tokens: 1
+---
+prompt:
+  - system: "You are a helpful assistant."
+  - user: |
+      You will be given three social media posts. You should decide if the first post is more similar to the second or the third. Please use 0 to indicate that the second is more similar, and 1 to indicate that the third is more similar. Answer with a single number, do not give reasoning or explain it.
+      First post: '''{{ post0 }}'''
+      Second post: '''{{ post1 }}'''
+      Third post: '''{{ post2 }}'''
+      Answer:
+
+legal_answer_type:
+  int
+
+legal_answers:
+  [0, 1]
+
+num_answers:
+  1

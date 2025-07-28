@@ -1,0 +1,75 @@
+---
+args:
+  model: "gpt-3.5-turbo-0125"  # can also try with gpt-4o
+  temperature: 0
+---
+prompt:
+  - system: >-
+      You are a social media user trying to understand the world. You
+      appreciate posts that broaden your perspective by offering
+      relevant information or intelligent analysis -- particularly if
+      they are presented in an accessible or engaging manner that
+      keeps your attention.
+  - user: |
+      Here is a social media thread:
+      Context:
+      {# ```
+      {{ post0.ancestors }}
+      ```#}
+      [no ancestors in thread]
+      FINAL POST:
+      ```
+      {{ post0 }}
+      ```
+      {# Main arguments made by the FINAL POST:
+      ```
+      {{ post0.arguments }}
+      ``` #}
+      You have just read the thread above, and are trying to decide
+      what you think about the FINAL POST.  You happen to see
+      the following COMMENT on another website:
+      ```
+      {{ post1 }}{# should eventually be post1.rewritten.  Rewritten version tries to preserve the arguments #}
+      {# ```
+      Main claims made by the COMMENT:
+      ```
+      {{ post1.claims }}
+      ``` #}
+      {# maybe include some other extracted qualities of post1 #}
+
+      Please fill out the following JSON template:
+      ```
+      {
+        "relevance": <NUMBER FROM 0 to 5>,
+        # include the remaining fields only if "relevance" > 0
+        "contributions": <UP TO ONE SENTENCE>,
+        "added_value": <NUMBER FROM 0 to 5>,
+        # include the remaining fields only if also "added_value" > 0
+        "support": <UP TO ONE SENTENCE>,
+        "opposition": <UP TO ONE SENTENCE>,
+        "persuasion": <NUMBER FROM -3 to 3>,
+      }
+      where{# the following are questions about the post0, post1 pair #}
+      * "relevance": If the COMMENT is relevant to the FINAL POST, then it was a nice coincidence that you happened to see it. How surprising a coincidence? Answer on a scale of 1-5, where 5 means that the COMMENT shares many Topics, Views, Claims, Evidence, or Reasoning with the FINAL POST, even if it ultimately disagrees with it.  If the COMMENT is not relevant, answer 0.
+
+      * "contributions": If the COMMENT is relevant to the FINAL POST, then how did it **add** to your understanding of the Topics, Views, Claims, Evidence, or Reasoning in the FINAL POST?  Answer in **one sentence**.  If the COMMENT did not add much of value, answer with the empty string "".
+
+      * "added_value": Considering your "contributions" answer in light of your known interests as a social media user, how much did you appreciate reading this comment at this time?  Answer on a scale of 0-5, using 0 if the "contributions" were "".
+ 
+      * "support": Does the COMMENT **support** any elements of the FINAL POST?  
+ 
+      * "opposition":  Does the COMMENT **cast doubt on** any elements of the FINAL POST?
+ 
+      * "persuasion": Answer on a scale of -3 to 3; for example,
+        * -2 means "COMMENT intends to make others disagree with the FINAL POST"
+        * 0 means "COMMENT does not address the claims or views of the FINAL POST"
+        * 2 means "COMMENT intends to make others agree with the FINAL POST"
+ 
+response_format: 
+   type: json_object
+
+legal_answer_type: json
+
+legal_answers: null
+
+num_answers: 1

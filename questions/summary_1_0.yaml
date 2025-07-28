@@ -1,0 +1,22 @@
+---
+args:
+  model: gpt-4o
+  temperature: 0.7
+---
+prompt:  # future versions could produce structured output based on `unary` prompt
+  - system: >- 
+      Summarize these social media posts, accurately identifying
+      common topics and themes while also showcasing diversity and
+      disagreement among the posts. Keep your summary concise and
+      informative within 1 to 2 paragraphs. Do not include any markup
+      or formatting in your response. Respond in plain text only.
+  {% for post in posts %}
+  - user: |-  # make each post a separate user message
+      {{ post.distill }}
+  {% endfor %}
+
+legal_answer_type: str
+
+legal_answers: null
+
+num_answers: 1

@@ -1,0 +1,21 @@
+---
+args:
+  model: "gpt-3.5-turbo-0125"
+  temperature: 0.1 
+---
+prompt:
+  - system: "You are a helpful assistant."
+  - user: "
+      You will be given social media posts. You should describe the topic from the post using a short phrase. 
+      Post: '''{{ post }}'''
+      Answer:
+    "
+
+legal_answer_type:
+  str
+
+legal_answers:
+  null
+
+num_answers:
+  5

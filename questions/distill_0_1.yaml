@@ -1,0 +1,36 @@
+---
+# Distill the main points of a post into a neutral style before embedding it.
+# 
+# TODO: Perhaps we should break the post up into several posts that could be embedded separately.
+args:
+  model: "gpt-4o"
+alias:
+  unary: unary_0_4
+
+---
+method: static
+value: |-
+  {% if post.unary(model=model).publicness == 0 %}N/A{% else %}{% for phrase in post.unary(model=model).get("arguments", []) %}* {{phrase}}
+  {% endfor %}{% for phrase in post.unary(model=model).get("connections", []) %}* Connection: {{phrase}}
+  {% endfor %}{% if post.unary(model=model).get("evidence_public", []) or post.unary(model=model).get("evidence_personal", []) or post.unary(model=model).get("pointers", []) %}
+  My evidence:
+
+  {% for phrase in post.unary(model=model).get("evidence_public", []) %}* {{phrase}}
+  {% endfor %}{% for phrase in post.unary(model=model).get("evidence_personal", []) %}* Personal experience: {{phrase}}
+  {% endfor %}{% for phrase in post.unary(model=model).get("pointers", [])%}* Further reading: {{phrase}}
+  {% endfor %}{% endif %}{% if post.unary(model=model).get("sentiment_positive", []) or post.unary(model=model).get("sentiment_negative", []) or post.unary(model=model).get("values", []) %}
+  My opinions:
+
+  {% if post.unary(model=model).get("sentiment_positive", []) %}* {% for phrase in post.unary(model=model).get("sentiment_positive", []) %}I support {{phrase}}. {% endfor %}
+  {% endif %}{% if post.unary(model=model).get("sentiment_negative", []) %}* {% for phrase in post.unary(model=model).get("sentiment_negative", []) %}I oppose {{phrase}}. {% endfor %} 
+  {% endif %}{% if post.unary(model=model).get("values", []) %}* {% for phrase in post.unary(model=model).get("values", []) %}I believe in {{phrase}}. {% endfor %}
+  {% endif %}{% endif %}{% if post.unary(model=model).get("predictions", []) or post.unary(model=model).get("proposals", []) %}
+  My conclusions:
+
+  {% if post.unary(model=model).get("predictions", []) %}{% for phrase in post.unary(model=model).get("predictions", []) %}* I predict: {{phrase}}
+  {% endfor %}{% endif %}{% if post.unary(model=model).get("proposals", []) %}{% for phrase in post.unary(model=model).get("proposals", []) %}* I propose: {{phrase}}
+  {% endfor %}{% endif %}{% endif %}{% if post.unary(model=model).get("questions", []) %}
+  My questions:
+  
+  {% for phrase in post.unary(model=model).get("questions", []) %}* {{phrase}}
+  {% endfor %}{% endif %}{% endif %}

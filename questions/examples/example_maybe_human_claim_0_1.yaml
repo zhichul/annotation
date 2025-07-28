@@ -1,0 +1,27 @@
+---
+args:
+  model: "gpt-3.5-turbo-0125"
+  temperature: 0.1 
+  method: openai # declaring method here allows overriding at command line via --args method=human or --args_global method=human if you wanted to run this with openai instead of human
+---
+{% if post.example_maybe_human_has_claim_0_1  %}
+prompt:
+  - system: "You are a helpful assistant."
+  - user: "
+      You will be given social media posts. You should describe the claim from the post using a short phrase. 
+      Post: '''{{ post }}'''
+      Answer:
+    "
+
+legal_answer_type:
+  str
+
+legal_answers:
+  null
+
+num_answers:
+  5
+{% else %}
+method: static
+value: No claim was made.
+{% endif %}

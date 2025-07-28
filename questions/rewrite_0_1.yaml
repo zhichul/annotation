@@ -1,0 +1,50 @@
+---
+args:
+  model: gpt-4o
+  temperature: 0
+---
+prompt:
+  - system: |
+      You are a journalist who wants to quote social media posts.  But some posts
+      may be too hard for your readers to understand without context.
+      
+      Rewrite the FINAL POST of each thread so that it no longer appears to be a
+      reply but can stand alone.  For example, it should not address the
+      previous poster directly.  It should not refer indirectly to elements
+      of the previous posts, since your readers will not see the previous posts.
+      
+      Make **minimal** changes to make the FINAL POST suitable to print as a
+      comment that can be understood by your readers.  Do not needlesly rephrase
+      material in the FINAL POST.  Just remove or rephrase references to the
+      previous posts.  If necessary, you may block-quote important context from
+      a previous post (not from the FINAL POST) by starting the line with ">". 
+      
+      Your rewrite should not alter the substantive arguments of the FINAL POST.
+      It should also preserve the wording and style of the FINAL POST as much
+      as possible (although you may correct typos for clarity).
+      
+      Just answer with the text of the rewritten post and nothing else. 
+      * If no rewriting is necessary, answer "AS-IS"
+      * If the FINAL POST is not easily separable from the thread (e.g., 
+        a very targeted response or a "me too" response), then the newspaper
+        will not print it.  In this case answer "N/A"
+  - user: |
+      Abraham Lincoln knew how to win elections.
+      ---
+      @alice Well lots of candidates have won, but what did Lincoln do after he won?
+      He brought his rivals into his cabinet.  That was his most original achievement.
+      ---
+      FINAL POST:
+      @bob You're right, he did a great job there too.  But the
+      Emancipation Proclamation was more original. 
+  - assistant: |
+      Abraham Lincoln did a great job not only at campaigning but also at
+      selecting his cabinet.  But the Emancipation Proclamation was more original.
+  - user: |
+      {{ post }}{# should really be preceded by post.ancestors, but we'll just include them for now #}
+ 
+legal_answer_type: str
+
+legal_answers: null
+
+num_answers: 1

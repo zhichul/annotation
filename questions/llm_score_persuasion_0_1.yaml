@@ -1,0 +1,6 @@
+---
+args:
+  model: "gpt-4o"
+---
+method: python
+expr: float( {% if "persuasion" not in post0.binary_0_4(post1, model=model) %} 0 {% else %} {{post0.binary_0_4(post1, model=model).persuasion}} {% endif %} )

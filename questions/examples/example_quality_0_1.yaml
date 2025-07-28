@@ -1,0 +1,25 @@
+---
+args:
+  model: "gpt-3.5-turbo-0125"
+  temperature: 0.1
+
+alias:
+  evidence: example_evidence_0_1
+---
+prompt:
+  - system: "You are a helpful assistant."
+  - user: "
+      You will be given social media posts. You should judge whether the post makes a high quality argument. Please rate the following post using a scale from 1 to 5, with 1 being bad argument 5 being a great argument, and 0 if it's not making an argument. Your response should be an integer from 0 to 5 inclusive. Consider whether the post includes evidence when making the judgement, another LLM has already annotated whether this post has evidence, using a score between 1 and 5.
+      Post: '''{{ post }}'''
+      LLM's annotation of evidence score: {{ post.evidence(temperature=0.0) }}
+      Answer:
+    "
+
+legal_answer_type:
+  int
+
+legal_answers:
+  [0,1,2,3,4,5]
+
+num_answers:
+  5

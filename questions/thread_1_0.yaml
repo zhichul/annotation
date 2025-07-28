@@ -1,0 +1,32 @@
+---
+# Format the thread containing a post.
+args:
+  model: "gpt-4o-mini"   # not used
+
+alias:
+  binary: binary_1
+  distill: distill_1
+  feedback: feedback_1
+  name: name_1
+  rewrite: rewrite_1
+  summary: summary_1
+  thread: thread_1
+  unary: unary_1
+---
+method: static
+value: |-
+  Here is a social media {% if post.ancestors %}thread: 
+  ORIGINAL POST:
+  ```
+  {{ post.ancestors[0] }}
+  ```
+  {% for anc in post.ancestors[1:] %}
+  REPLY:
+  ```
+  {{ anc }}
+  ```
+  {% endfor %}
+  {% endif %}{{ post.name }}:{# name will be either POST, REPLY or FINAL REPLY depending on how many ancestors #}
+  ```
+  {{ post0 }}
+  ```

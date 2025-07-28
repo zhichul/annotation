@@ -1,0 +1,75 @@
+---
+args:
+  model: "gpt-4o"
+  temperature: 0
+---
+prompt:
+  - system: >-
+      You are a social media user trying to understand the world. You
+      appreciate posts that broaden your perspective by offering
+      relevant information or intelligent analysis -- particularly if
+      they are presented in an accessible or engaging manner that
+      keeps your attention.  You are a good reader, alert to 
+      allusions, implications, and sarcasm.
+  - user: |-
+      {{ post0.thread }}
+      
+      Main arguments made by the {{ post0.name }}:{% if "arguments" in post0.unary and len(post0.unary.arguments) > 0 %}
+      {% for sentence in post.unary.arguments %}* {{sentence}}
+      {% endfor %}{% endif %}
+
+      You have just read the thread above, and are trying to decide
+      what you think about the {{ post0.name }}.  You happen to see
+      the following COMMENT on another website:
+      ```
+      {{ post1.rewrite }}{# decontextualized version that will be shown to user; consider using post1.distill instead, which extracts and organizes content #}
+
+      Please fill out the following JSON template:
+      ```
+      {
+        "relevance": <NUMBER FROM 0 to 5>,
+        # include the remaining fields only if "relevance" > 0
+        "contributions": <UP TO ONE SENTENCE>,
+        "added_value": <NUMBER FROM 0 to 5>,
+        # include the remaining fields only if also "added_value" > 0
+        "support": <UP TO ONE SENTENCE>,
+        "opposition": <UP TO ONE SENTENCE>,
+        "opposition_type": <LIST OF KEYWORDS>,  # may be empty list []
+        "persuasion": <NUMBER FROM -3 to 3>,
+      }
+      where{# the following are questions about the post0, post1 pair #}
+      * "relevance": Consider whether the COMMENT really relates to the {{ post0.name }}.  If so, then it was a nice coincidence that you happened to see it.  How surprising a coincidence?  Answer on a scale of 1-5, where 5 means that the COMMENT shares many Topics, Views, Claims, Evidence, or Reasoning with the {{ post0.name }}, even if it ultimately disagrees with the {{ post0.name }}.  If the COMMENT is not relevant, answer 0.  If the COMMENT is only loosely on the same topic, answer 1.  Do not give a score of 4 or 5 unless the COMMENT could reasonably have been part of a short conversation about the {{ post.name }}'s topic.
+
+      * "contributions": If the COMMENT is relevant to the {{ post0.name }}, then how did it **add** to your understanding of the Topics, Views, Claims, Evidence, or Reasoning in the {{ post0.name }}?  Answer in **one sentence**.  If the COMMENT did not add much of value, answer with the empty string "".
+
+      * "added_value": Considering your known interests as a social media user, how much did you appreciate reading this comment at this time?  Answer on a scale of 0-5.  You should have "added_value" ≤ "relevance", since a post adds value only if it is relevant and **also** makes new high-quality contributions.  If the comment is not particularly substantive, interesting or informative, then indicate this with "added_value" < "relevance".  If "contributions" is "", answer 0.
+ 
+      * "support": Does the COMMENT **support** any elements of the {{ post0.name }}?  
+ 
+      * "opposition_type": Which elements of the {{ post0.name }} does the COMMENT dispute, if any?{# Intended for future fine-grained disagreement stacks, or for similarity within the disagreement stack. #}
+        - "evidence": the COMMENT doubts that the evidence is accurate
+        - "values": the COMMENT is based on different moral or social goals
+        - "sentiment": the COMMENT holds different subjective opinions
+        - "logic": the COMMENT claims that the {{ post0.name }}'s evidence, values, and sentiments do not justify its conclusion
+        - "strength": the COMMENT provides counterarguments that it feels are more important
+        - "proposal": the COMMENT recommends a different course of action
+ 
+      * "opposition":  Does the COMMENT **cast doubt on** any elements of the {{ post0.name }}?
+
+      * "persuasion": Answer on a scale of -3 to 3; for example,
+        * -3 means "COMMENT explicitly addresses and counters positions of {{ post0.name }}"
+        * -2 means "COMMENT intends to make others disagree with positions of {{ post0.name }}"
+        * -1 means "COMMENT takes positions that are loosely opposed to positions of {{ post0.name }}"
+        * 0 means "COMMENT does not address the positions of {{ post0.name }}"
+        * 1 means "COMMENT takes positions that are loosely concordant with positions of {{ post0.name }}"
+        * 2 means "COMMENT intends to make others agree with positions of {{ post0.name }}"
+        * 3 means "COMMENT explicitly addresses and reinforces positions of {{ post0.name }}"
+ 
+response_format: 
+   type: json_object
+
+legal_answer_type: json
+
+legal_answers: null
+
+num_answers: 1

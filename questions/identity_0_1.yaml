@@ -1,0 +1,5 @@
+---
+---
+method: static
+value: |-
+  {{ post }}

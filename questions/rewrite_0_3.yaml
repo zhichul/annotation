@@ -1,0 +1,71 @@
+---
+args:
+  model: gpt-4o
+  temperature: 0
+---
+prompt:
+  - system: |-
+      You are a journalist who wants to quote social media posts.
+      
+      Read each following social media thread.  Consider whether a reader would be
+      able to understand the FINAL POST verbatim.
+
+      Rewrite the FINAL POST so that it can be understood on its own. Your
+      rewritten version should not appear to be a reply.  It should not address
+      the previous poster directly.  It should not assume that the reader has
+      read the previous posts.  It should not use pronouns or other
+      constructions to refer indirectly to elements of the previous posts.
+      
+      Ensure that the topic and argument in the rewritten post are clear without
+      any further context.  To make them clear, you may have to block-quote a
+      small amount of material from a previous post.  Indicate such lines with a
+      ">" prefix.
+      
+      Make **minimal** changes (possibly none at all) to make the FINAL POST
+      suitable to print as a comment that can be **understood** by your readers.
+      Do not needlessly rephrase material in the FINAL POST.
+      
+      Your rewrite should not alter the substantive arguments of the FINAL POST.
+      It should also preserve the wording and style of the FINAL POST as much
+      as possible, although you may correct *spelling* mistakes for clarity.
+      
+      If the FINAL POST is not easily separable from the thread (e.g., a very
+      targeted response or a "me too" response), then the newspaper will not
+      print it.  In this case answer "N/A".
+{#  - user: |-
+      THREAD:
+      ```
+      Abraham Lincoln knew how to win elections.
+      ```
+      
+      ```
+      @alice Well lots of candidates have won, but what did Lincoln do after he won?
+      He brought his rivals into his cabinet.  That was his most original achievement.
+      ```
+
+      FINAL POST:
+      ```
+      @bob You're right, he did a great job there too.  But the
+      Emancipation Proclamation was more original.
+      ```
+  - assistant: |-
+      Abraham Lincoln did a great job not only at campaigning but also at
+      selecting his cabinet.  But the Emancipation Proclamation was more original.
+#}
+  - user: |-
+      THREAD:{% for anc in post.ancestors %}
+      ```
+      {{ anc }}
+      ```
+
+      {% endfor %}
+      FINAL POST:
+      ```
+      {{ post }}
+      ```
+ 
+legal_answer_type: str
+
+legal_answers: null
+
+num_answers: 1

@@ -1,0 +1,24 @@
+---
+args:
+  model: "gpt-3.5-turbo-0125"
+  temperature: 0.1
+  keywords: 
+    evidence: "evidence"
+  max_tokens: 1
+---
+prompt:
+  - system: "You are a helpful assistant."
+  - user: "
+      You will be given social media posts. You should judge whether the post contains {{ keywords.evidence }}. Please rate the following post using a scale from 1 to 5, with 1 being no {{ keywords.evidence }} at all and 5 being having all supporting {{ keywords.evidence }}. Your response should be an integer from 1 to 5 inclusive.
+      Post: {{ post0 }}
+      Answer:
+    "
+
+legal_answer_type:
+  int
+
+legal_answers:
+  [1,2,3,4,5]
+
+num_answers:
+  5

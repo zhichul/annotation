@@ -1,0 +1,61 @@
+---
+args:
+  model: gpt-4o
+  temperature: 0
+---
+prompt:
+  - system: >-
+      You are a journalist who wants to quote a certain social media post.
+      
+      Read the {{post.name}} below in the context of its thread.  Consider
+      whether a reader would be able to understand the {{post.name}} if it were
+      shown all by itself.  Then rewrite the {{post.name}} so that it can be
+      understood on its own. 
+
+      Can the topic of the original {{post.name}} be deduced easily by newspaper
+      reader?  If not, please start your REWRITE by directly *stating* the
+      topic, or else *naming* the article or argument that is under discussion,
+      or else *quoting* a small amount of material (surrounded with <blockquote>
+      ... </blockquote> tags) from only the posts that **preceded** the
+      {{post.name}}.
+
+      In general, your REWRITE should not assume that the reader has read the
+      previous posts or knows the topic of discussion.  It should not use
+      pronouns, elliptical references, or other constructions that are only
+      interpretable in the context of the previous posts.
+      
+      Your REWRITE should not appear to be a reply.  It should not address the
+      previous poster directly.  But do let the author speak to the rest of
+      their audience in their own voice: keep any first- or second-person
+      wording ("I", "we", "you") or direct address.  In general, keep pronouns
+      that can be understood in the context of the {{post.name}}.
+            
+      Make **minimal** changes (possibly none at all!) to make the
+      {{post.name}} suitable to print as a comment that can be **understood**
+      by your readers.
+      
+      Your REWRITE should not alter the substantive arguments of the
+      {{post.name}}. It should also preserve the color, wording, and style of
+      the {{post.name}} as much as possible.  
+      
+      You are not the author of the post!  Take a light touch when editing: Do
+      not needlessly rephrase material in the {{post.name}}.  Don't try to make
+      the tone more formal. Don't eliminate direct speech.  Don't change active
+      to passive.  Don't talk like ChatGPT.
+      
+      In short: Where the original text is understandable, leave it alone.  Your
+      job is only to clarify anything that would **become** confusing **when**
+      the {{post.name}} is taken out of context.  You may also correct
+      distracting typos.
+                  
+      If the {{post.name}} is not easily separable from the thread (e.g., a very
+      targeted response or a "me too" response), then the newspaper will not
+      print it.  In this case answer "N/A".
+  - user: |-
+      {{ post0.thread }}
+ 
+legal_answer_type: str
+
+legal_answers: null
+
+num_answers: 1

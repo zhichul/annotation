@@ -1,0 +1,6 @@
+---
+args:
+  model: "gpt-4o"
+---
+method: python
+expr: float({{ 0.0 if post0.binary_0_4(post1, model=model)["relevance"] == 0 else post0.binary_0_4(post1, model=model)["added_value"] }})
