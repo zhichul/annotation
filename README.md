@@ -46,5 +46,3 @@ Example prompts are under `questions/examples`, prompts we used in practice are 
 
 ---
 For commandline usage see [USAGE.md](USAGE.md).
-
----
